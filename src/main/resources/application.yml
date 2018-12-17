@@ -1,0 +1,30 @@
+server:
+  port: 8620
+
+spring:
+  # spring 自动配置influxdb
+  influx:
+    url: http://192.168.199.128:8086/
+    user: admin
+    password: admin
+    database: influx_database
+  # spring 集成kafka配置
+  kafka:
+    consumer:
+      #  表示kafka不持有当前offset时应当采用的策略
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: test
+      bootstrap-servers: 192.168.199.128:9092
+      topic: topic_test
+
+# 生产成功消息配置
+listener:
+  visibleLog: true
+  listenerQueueSize: 100000
+  corePoolSize: 1
+  maxPoolSize: 50
+  poolQueueCapacity: 500
+  threadNamePrefix: data-report-kafka-send
+  visiblePool: false

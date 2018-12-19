@@ -36,27 +36,20 @@ public class InfluxConfig {
     private String influxUser;
     @Value("${spring.influx.password}")
     private String influxPassword;
+
     @Bean
-    public InfluxDB influxDB(){
+    public InfluxDB influxDB() {
         InfluxDB influxDB = InfluxDBFactory.connect(influxUrl, influxUser, influxPassword);
         BiConsumer<Iterable<Point>, Throwable> exceptionHandler = (batch, exception) -> {
-            //do something
+            //批量插入失败
+            log.error("influxDB 入库失败，请查看");
+            exception.printStackTrace();
         };
-        BatchOptions options = BatchOptions.DEFAULTS.bufferLimit(500).actions(100).flushDuration(100).jitterDuration(20).exceptionHandler(exceptionHandler);
+        // 设置批量插入，满足条件1000条开始插入，每一秒插入一次
+        BatchOptions options = BatchOptions.DEFAULTS.bufferLimit(5000).actions(100).flushDuration(1000).jitterDuration(20).exceptionHandler(exceptionHandler);
+        //开启批量插入
         influxDB.enableBatch(options);
         influxDB.setDatabase(influxDatabase);
         return influxDB;
     }
-//    private static InfluxDB getClient(String databaseName) {
-//        InfluxDB influxDB = InfluxDBFactory.connect("http://192.168.199.128:8086", "admin", "admin");
-//        Pong pong = influxDB.ping();
-//        if (pong != null) {
-//            log.info("Pong: " + pong);
-//        } else {
-//            return null;
-//        }
-//        Query query = new Query("CREATE DATABASE IF NOT EXISTS " + databaseName, databaseName);
-//        influxDB.query(query);
-//        return client;
-//    }
 }

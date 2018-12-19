@@ -47,8 +47,8 @@ public class InfluxService {
      */
     public void writeRecord(String measurement, String record1, String record2, String record3) {
         influxDB.write(Point.measurement(measurement)
-                .tag("filed_name", record1)
-                .addField("filed_value", record3)
+                .tag("point_name", record1)
+                .addField("point_value", record3)
                 .time(Long.parseLong(record2), TimeUnit.MILLISECONDS)
                 .build());
     }

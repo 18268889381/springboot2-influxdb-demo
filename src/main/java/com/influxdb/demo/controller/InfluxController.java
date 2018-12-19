@@ -1,6 +1,5 @@
 package com.influxdb.demo.controller;
 
-import com.influxdb.demo.config.InfluxConfig;
 import com.influxdb.demo.service.InfluxService;
 import org.influxdb.dto.QueryResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +14,6 @@ import javax.annotation.Resource;
 @RestController
 public class InfluxController {
     @Resource
-    private InfluxConfig influxConfig;
-    @Resource
     private InfluxService influxService;
 
     /**
@@ -24,6 +21,6 @@ public class InfluxController {
      */
     @PostMapping("/influx/query")
     public QueryResult sendMsg(String sql) {
-        return influxService.querySql(influxConfig.getInfluxDatabase(), sql);
+        return influxService.querySql(sql);
     }
 }
